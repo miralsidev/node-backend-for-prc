@@ -12,14 +12,14 @@ const userSchemma = new mongoose.Schema({
         type : String,
         required : true
     },
-    // addres:{
-    //     type : String,
-    //     required : true
-    // },
-    // password:{
-    //     type : String,
-    //     required : true
-    // },
+    addres:{
+        type : String,
+        required : true
+    },
+    password:{
+        type : String,
+        required : true
+    },
     deleteDate:{
         type:Date,
         default:null

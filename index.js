@@ -1,29 +1,19 @@
-const { mongoose } = require("mongoose");
-const cors = require('cors');
 require("dotenv").config();
-const {router} = require("./routes/User")
-db_url = process.env.db_url;
-port = process.env.port;
+// const { mongoose } = require("mongoose");
+const cors = require('cors');
+const userRoute = require("./routes/User")
+const port = process.env.PORT;
+const connectDb = require('./database/db-con')
 const express = require("express");
 const app = express();
+
 app.use(cors());
 app.use(express.json());
-const connectdb = async (db_url) => {
-  const db_option = {
-    dbname: process.env.dbname,
-  };
-  mongoose
-    .connect(db_url, db_option)
-    .then(() => {
-      console.log("connection successfully..!!");
-      app.use(express.json());
-      app.use("/api",router)
-      app.listen(port, () =>
-        console.log(`Example app listening on port ${port}!`)
-      );
-    })
-    .catch((error) => {
-      console.log("error connecting to mongodb:", error);
-    });
-};
-connectdb(db_url);
+
+app.use('/api', userRoute)
+
+connectDb.then(() => {
+  app.listen(port, () => {
+    console.log("server start ", port)
+  })
+})

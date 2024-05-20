@@ -1,5 +1,10 @@
-const express=require('express')
-const router=express.Router();
-const {addUser}=require("../controller/User")
-router.post("/addUser",addUser)
-module.exports={router}
+const router = require('express').Router();
+const userController = require("../controller/User");
+
+
+
+router.post("/addUser", userController.addUser)
+router.get("/displayUser", userController.getUser)
+
+
+module.exports = router

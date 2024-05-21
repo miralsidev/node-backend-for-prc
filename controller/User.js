@@ -27,7 +27,8 @@ const getUser = async (req, res) => {
     const data = await User.find();
     return res.json({ message: "display all data ", data: data });
   } catch (error) {
-    
+    console.error(error);
+    return res.json({ status: 500, message: "internal server error " ,error});
   }
 
 };

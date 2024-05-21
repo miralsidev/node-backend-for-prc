@@ -29,6 +29,5 @@ const getUser = async (req, res) => {
   } catch (error) {
     
   }
-
 };
 module.exports = { addUser, getUser };

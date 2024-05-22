@@ -8,9 +8,11 @@ const addUser = async (req, res) => {
   try {
     console.log("hello");
     const { fname, lname, email, password } = req.body;
-    const hashpassword = await bcrypt.hash(password, 10);
-    console.log("hashpassword=", hashpassword);
+
     if (fname && lname && email && password) {
+
+      const hashpassword = await bcrypt.hash(password, 10);
+
       const data = new User({
         fname: fname,
         lname: lname,
@@ -18,9 +20,9 @@ const addUser = async (req, res) => {
         password: hashpassword,
       });
       await data.save();
-      res.json({ message: "succsessfully..!!" });
+      res.json({ status: 200, message: "succsessfully..!!" });
     } else {
-      return res.json({ status: 400, message: "all filed are required" });
+      return res.json({ status: 409, message: "all filed are required" });
     }
   } catch (error) {
     console.error(error);

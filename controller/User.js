@@ -90,8 +90,8 @@ const userForgotPasswordEmail = async (req, res) => {
           Math.floor(1000 + Math.random() * 9000).toString();
         const otp = generateOTP();
         console.log("otp = = =",otp);
-        const otpExpiration = new Date(Date.now() +3*60 * 1000);
-        // const otpExpiration = new Date(Date.now() + 60 * 1000);
+        // const otpExpiration = new Date(Date.now() +3*60 * 1000);
+        const otpExpiration = new Date(Date.now() + 60 * 1000);
 
         await User.findOneAndUpdate(
           { _id: user.id },

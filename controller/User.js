@@ -8,7 +8,11 @@ const addUser = async (req, res) => {
   try {
     console.log("hello");
     const { fname, lname, email, password } = req.body;
-
+    const user = await User.findOne({ email });
+    if (user) {
+      return res.status(400).json({ message: 'User is already Exist' });
+      // return res.json({status:400, message: 'User is already Exist' });
+    }
     if (fname && lname && email && password) {
 
       const hashpassword = await bcrypt.hash(password, 10);
@@ -21,6 +25,8 @@ const addUser = async (req, res) => {
       });
       await data.save();
       res.json({ status: 200, message: "succsessfully..!!" });
+      // return res.json({ status:202 ,message: 'User is already Exist' });
+
     } else {
       return res.json({ status: 409, message: "all filed are required" });
     }
@@ -44,13 +50,12 @@ const login = async (req, res) => {
     if (email && password) {
       const user = await User.findOne({ email });
       if (!user) {
-        return res.status(400).json({ message: "Invalid email or password" });
+        return res.status(409).json({ message: "Invalid email" });
       }
 
       const isMatch = await bcrypt.compare(password, user.password);
-
       if (!isMatch) {
-        return res.status(400).json({ message: "Invalid email or password" });
+        return res.status(409).json({ message: "Invalid password" });
       }
       let jwtSecretKey = process.env.secret_key;
       const token = jwt.sign({ userId: user._id }, jwtSecretKey);
@@ -58,9 +63,9 @@ const login = async (req, res) => {
       (text =
         "Welcome to SpeedyWheels Rentals! We are thrilled to have you as a member of our community. "),
         mail(email, subject, text);
-      res.json({ message: "Login successful", token });
+      res.json({ status: 200, message: "Login successful", token });
     } else {
-      return res.json({ message: "all filed are required ..!" });
+      return res.json({ status: 400, message: "all filed are required ..!" });
     }
   } catch (error) {
     console.error(error);
@@ -73,6 +78,10 @@ const userForgotPasswordEmail = async (req, res) => {
     if (email) {
       const user = await User.findOne({ email: email });
       console.log("user = ", user);
+      if (!user) {
+        return res.json({ status: 400, message: "User not found" })
+      }
+
       if (req.body.email === user.email) {
         const transporter = nodemailer.createTransport({
           host: process.env.EMAIL_HOST,
@@ -89,8 +98,8 @@ const userForgotPasswordEmail = async (req, res) => {
         const generateOTP = () =>
           Math.floor(1000 + Math.random() * 9000).toString();
         const otp = generateOTP();
-        console.log("otp = = =",otp);
-        const otpExpiration = new Date(Date.now() +3*60 * 1000);
+        console.log("otp = = =", otp);
+        const otpExpiration = new Date(Date.now() + 3 * 60 * 1000);
         // const otpExpiration = new Date(Date.now() + 60 * 1000);
 
         await User.findOneAndUpdate(
@@ -119,7 +128,7 @@ const userForgotPasswordEmail = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    return res.json({ status: 500, message: "internal server error" ,error});
+    return res.json({ status: 500, message: "internal server error", error });
   }
 };
 const userForgotPasswordOtp = async (req, res) => {
@@ -128,12 +137,12 @@ const userForgotPasswordOtp = async (req, res) => {
     const user = await User.findOne({ email: email, otp: otp });
     console.log("user = ", user);
     if (!user) {
-      return res.json({ message: "invalid otp ..!!" });
+      return res.json({ status: 400, message: "invalid otp ..!!" });
     }
     const now = new Date();
     if (now > user.otpExpiration) {
       await User.updateOne({ email }, { otp: null, otpExpiration: null });
-      return res.json({ message: "otp expired" });
+      return res.json({ status: 410, message: "otp expired" });
     }
     return res.json({ message: "Otp Verification Successfully" });
   } catch (error) {
@@ -141,34 +150,37 @@ const userForgotPasswordOtp = async (req, res) => {
   }
 };
 const updatePassword = async (req, res) => {
-  const { email, newpassword,conformPassword} = req.body;
+  const { email, newpassword, conformPassword } = req.body;
   try {
     const user = await User.findOne({ email });
     if (!user) {
       return res.json({ message: "user not found" });
+    }
+    console.log("newwpass==", newpassword);
+    console.log("conform pass v= ", conformPassword);
+    // if (!newpassword === conformPassword)
+    if (newpassword !== conformPassword) {
+      return res.json({ status: 400, message: "The password and confirmation password do not match." })
     }
     const hashedPassword = await bcrypt.hash(newpassword, 10);
     await User.updateOne(
       { email: user.email },
       { $set: { password: hashedPassword } }
     );
-    const hashConformPass = await bcrypt.hash(conformPassword,10);
-    await User.updateOne(
-      {email:user.email},
-      {$set:{conformPassword:hashConformPass}}
-    )
     await User.updateOne({ email }, { otp: null, otpExpiration: null });
-    res.status(200).json({ message: "Password Updated Successfully" });
+    // res.status(200).json({ message: "Password Updated Successfully" });
+    res.json({ status:200, message: "Password Updated Successfully" });
   } catch (error) {
     return res.json({ status: 500, message: "internal server error" });
   }
 };
-module.exports = { addUser, getUser, login,  userForgotPasswordEmail,
+module.exports = {
+  addUser, getUser, login, userForgotPasswordEmail,
   userForgotPasswordOtp,
-  updatePassword };
+  updatePassword
+};
 
 
 
 
 
- 

@@ -98,8 +98,8 @@ const userForgotPasswordEmail = async (req, res) => {
         const generateOTP = () =>
           Math.floor(1000 + Math.random() * 9000).toString();
         const otp = generateOTP();
-        console.log("otp = = =", otp);
-        const otpExpiration = new Date(Date.now() + 3 * 60 * 1000);
+        console.log("otp = = =",otp);
+        const otpExpiration = new Date(Date.now() +3*60 * 1000);
         // const otpExpiration = new Date(Date.now() + 60 * 1000);
 
         await User.findOneAndUpdate(
@@ -174,8 +174,7 @@ const updatePassword = async (req, res) => {
     return res.json({ status: 500, message: "internal server error" });
   }
 };
-module.exports = {
-  addUser, getUser, login, userForgotPasswordEmail,
+module.exports = { addUser, getUser, login,  userForgotPasswordEmail,
   userForgotPasswordOtp,
   updatePassword
 };

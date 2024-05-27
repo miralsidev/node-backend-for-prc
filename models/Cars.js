@@ -1,13 +1,25 @@
 const mongooes = require("mongoose");
 const ProductInsertSchema = new mongooes.Schema({
-   plate_number: {
+  plate_number: {
     type: String,
     unique: true,
     required: true,
   },
-  Image:{
-    type:String,
-    required: true,
+  filename: {
+    type: String,
+    require: true
+  },
+  size: {
+    type: String,
+    require: true
+  },
+  conneteType: {
+    type: String,
+    require: true
+  },
+  path: {
+    type: String,
+    require: true
   },
   brand: {
     type: String,
@@ -49,6 +61,6 @@ const ProductInsertSchema = new mongooes.Schema({
     type: Date,
     default: null,
   },
-},{ timestamps: true });
+}, { timestamps: true });
 const Cars = mongooes.model("cars", ProductInsertSchema);
 module.exports = Cars;

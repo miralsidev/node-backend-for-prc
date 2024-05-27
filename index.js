@@ -9,6 +9,11 @@ const connectDb = require('./database/db-con')
 const express = require("express");
 const app = express();
 
+// const dirname = require('path')
+const path = require('path');
+app.use(express.urlencoded({ extended: true}))
+app.use('/upload',express.static(path.join(__dirname,'/upload')))
+
 app.use(cors());
 app.use(express.json());
 app.use('/admin',adminRoute)

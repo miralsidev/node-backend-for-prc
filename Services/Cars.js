@@ -3,11 +3,20 @@ const Cars = require('../models/Cars')
 const CarService = [];
 
 CarService.create = async (param) => {
-    console.log("service");
-    const data = await Cars
-      .create(param)
-      .then((e) => e)
-      .catch((e) => e);
-    return data;
-  };
-  module.exports = {CarService}
+  console.log("param", param)
+  const data = await Cars
+    .create({
+      
+    })
+    .then((e) => e)
+    .catch((e) => e);
+  console.log("datadatadata", data)
+  return data;
+};
+
+CarService.find = async () => {
+  const data = await Cars.find().then((e) => e).catch((e) => e);
+  console.log(data, "======data=====");
+  return data;
+}
+module.exports = { CarService }

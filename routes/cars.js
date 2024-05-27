@@ -1,6 +1,9 @@
 
 const carsInsertController = require("../controller/Cars")
 const router = require('express').Router();
-router.post("/AddCars", carsInsertController.AddCars)
+const {upload} = require('../Helper/FileUpload')
 
+
+router.post("/AddCars",upload.single('Image') ,carsInsertController.AddCars)
+router.get('/GetData',carsInsertController.DisplayCars)
 module.exports = router

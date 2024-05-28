@@ -11,14 +11,14 @@ const app = express();
 
 // const dirname = require('path')
 const path = require('path');
-app.use(express.urlencoded({ extended: true}))
-app.use('/upload',express.static(path.join(__dirname,'/upload')))
+app.use(express.urlencoded({ extended: true }))
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
 
 app.use(cors());
 app.use(express.json());
-app.use('/admin',adminRoute)
+app.use('/admin', adminRoute)
 app.use('/api', userRoute)
-app.use('/cars',carsRoutes)
+app.use('/cars', carsRoutes)
 
 connectDb.then(() => {
   app.listen(port, () => {

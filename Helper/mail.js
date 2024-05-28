@@ -26,3 +26,4 @@ const mail = (email,subject,text) => {
       });
 }
 module.exports={mail}
+

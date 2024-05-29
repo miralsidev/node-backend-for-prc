@@ -1,18 +1,15 @@
-
 const dotenv = require("dotenv");
 dotenv.config();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const adminModels = require("../models/Admin")
-const { mail } = require('../Helper/mail')
+const adminModels = require("../models/Admin");
+const { mail } = require("../Helper/mail");
 const adminLogin = async (req, res) => {
   const { email, password } = req.body;
-
   try {
     if (email && password) {
-      console.log("admin----email-", email);
-      const admin = await adminModels.findOne({ email: email })
-
+      console.log("admin----email-", email); // aa backend front end run karu?? haaa
+      const admin = await adminModels.findOne({ email: email });
       console.log("Admin====", admin);
       if (admin) {
         const ismatch = bcrypt.compareSync(password, admin.password);
@@ -24,9 +21,10 @@ const adminLogin = async (req, res) => {
             },
             process.env.secret_key
           );
-          subject = "Welcome Back to SpeedyWheels Rentals! You're Successfully Logged In!",
-            text = `Welcome to SpeedyWheels Rentals! We are thrilled to have you as a member of our community. Your registration is now complete, and you're all set to explore and enjoy our wide range of rental cars.`,
-            mail(email, subject, text)
+          (subject =
+            "Welcome Back to SpeedyWheels Rentals! You're Successfully Logged In!"),
+            (text = `Welcome to SpeedyWheels Rentals! We are thrilled to have you as a member of our community. Your registration is now complete, and you're all set to explore and enjoy our wide range of rental cars.`),
+            mail(email, subject, text);
 
           return res.json({
             status: 200,
@@ -39,8 +37,7 @@ const adminLogin = async (req, res) => {
             message: "Somthing went wrong, Please try later...!!",
           });
         }
-      }
-      else {
+      } else {
         return res.json({
           status: 409,
           message: "Somthing went wrong,please try later...!!",
@@ -60,6 +57,5 @@ const adminLogin = async (req, res) => {
     });
   }
 };
-
 
 module.exports = { adminLogin };

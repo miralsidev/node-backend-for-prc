@@ -155,14 +155,15 @@ const deleteCars = async (req, res) => {
     );
     console.log("result == ", result);
     if (!result) {
-      res.json({ message: "documnet is not found" });
+      res.json({status:400, message: "documnet is not found" });
     }
-    res.json({ message: "Documnet Deleted Successfully..!!" });
+    res.json({status:200, message: "Documnet Deleted Successfully..!!" });
   } catch (error) {
     console.log(error);
     return res.json({ status: 500, message: "intrnal server error" });
   }
 }
+
 module.exports = { AddCars, DisplayCars, UpdateCras, viewData, deleteCars }
 
 

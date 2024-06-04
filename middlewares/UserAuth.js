@@ -1,39 +1,38 @@
-// const userModel = require("../models/userModel");
-const user = require("../models/User")
+
+const { User } = require("../models/User")
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 dotenv.config();
-let token;
 const userAuth = async (req, res, next) => {
-  try {
-    const { authorization } = req.headers;
-  if (authorization && authorization.startsWith("Bearer")) {
-    token = authorization.split(" ")[1];
-    const userTokenData = jwt.verify(token, process.env.secret_key);
-    console.log("user =", userTokenData);
-    if (userTokenData.id) {
-      const user = await user.findOne({ _id: userTokenData.id });
-      if (user) {
-        req.userData = {
-          id: user._id,
-          email: user.email,
-      
-        };
-        return next();
-      } else {
-        res.json({ status: 400, message: "you are not authorizeed" });
-      }
-    } else {
-      res.json({ status: 400, message: "you are not authorizeed" });
+  let token
+  console.log(token, "++++++++++++++++++")
+  const { authorization } = req.headers
+  console.log(authorization, "authorizationauthorization")
+  if (authorization && authorization.startsWith('Bearer')) {
+    try {
+      token = authorization.split(' ')[1]
+      console.log(token, "tokentoken")
+      const { userID } = jwt.verify(token, process.env.JWT_SECRATE_KEY)
+      console.log(userID, "userID userID userID ")
+      req.user = await User.findById(userID)
+      // req.user = await User.findById(userID).select('-password')
+      console.log(req.user, "11111111111111111111111111111111111")
+      next()
+    } catch (error) {
+      console.log(error.message, "error.messageerror.messageerror.message")
+      return res.json({
+        status: 400,
+        message: "un authorised user"
+      })
     }
-  } else {
-    return res.status(400).json({ status: 400, message: "Authorization header missing or invalid" });
   }
-    // next();
-  } catch (error) {
-    console.error("Token verification error:", error.message);
-    return res.status(401).json({ status: 401, message: "Unauthorized" });
+  if (!token) {
+    return res.json({
+      status: 400,
+      message: "un authorised user"
+    })
   }
 };
 
 module.exports = { userAuth };
+

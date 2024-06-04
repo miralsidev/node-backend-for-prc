@@ -25,7 +25,7 @@ const addUser = async (req, res) => {
       });
       await data.save();
       res.json({ status: 200, message: "succsessfully..!!" });
-      // return res.json({ status:202 ,message: 'User is already Exist' });
+      ;
 
     } else {
       return res.json({ status: 409, message: "all filed are required" });
@@ -45,31 +45,67 @@ const getUser = async (req, res) => {
   }
 };
 const login = async (req, res) => {
+  // try {
+  //   const { email, password } = req.body;
+  //   if (email && password) {
+  //     const user = await User.findOne({ email });
+  //     if (!user) {
+  //       return res.status(409).json({ message: "Invalid email" });
+  //     }
+
+  //     const isMatch = await bcrypt.compare(password, user.password);
+  //     if (!isMatch) {
+  //       return res.status(409).json({ message: "Invalid password" });
+  //     }
+  //     let jwtSecretKey = process.env.secret_key;
+  //     const token = jwt.sign({ userId: user._id, userEmail: user.email }, jwtSecretKey);
+  //     subject = "Login succesfully..!!";
+  //     (text =
+  //       "Welcome to SpeedyWheels Rentals! We are thrilled to have you as a member of our community. "),
+  //       mail(email, subject, text);
+  //     res.json({ status: 200, message: "Login successful", token });
+  //   } else {
+  //     return res.json({ status: 400, message: "all filed are required ..!" });
+  //   }
+  // } catch (error) {
+  //   console.error(error);
+  //   return res.json({ status: 500, message: "internal server error ", error });
+  // }
+
   try {
     const { email, password } = req.body;
-    if (email && password) {
-      const user = await User.findOne({ email });
-      if (!user) {
-        return res.status(409).json({ message: "Invalid email" });
+    console.log(email, password, "email, password")
+    // const user = await userModel.findOne({ email }).populate('cart');
+    const user = await User.findOne({ email })
+    console.log(user)
+    if (user) {
+      const isMatch = await bcrypt.compare(password, user.password)
+      if (user.email == email && isMatch) {
+        const secret = process.env.JWT_SECRATE_KEY
+        console.log(secret, "secretsecret")
+        console.log(secret)
+        const token = jwt.sign({ userID: user._id }, secret, { expiresIn: '5d' })
+        console.log(token, "tokentoken")
+        return res.json({
+          status: 200,
+          message: "login success",
+          "token": token
+        })
+      } else {
+        return res.json({
+          status: 400,
+          message: 'bad request'
+        })
       }
-
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) {
-        return res.status(409).json({ message: "Invalid password" });
-      }
-      let jwtSecretKey = process.env.secret_key;
-      const token = jwt.sign({ userId: user._id }, jwtSecretKey);
-      subject = "Login succesfully..!!";
-      (text =
-        "Welcome to SpeedyWheels Rentals! We are thrilled to have you as a member of our community. "),
-        mail(email, subject, text);
-      res.json({ status: 200, message: "Login successful", token });
     } else {
-      return res.json({ status: 400, message: "all filed are required ..!" });
+      return res.json({
+        status: 400,
+        message: "user not found"
+      });
     }
-  } catch (error) {
-    console.error(error);
-    return res.json({ status: 500, message: "internal server error ", error });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 const userForgotPasswordEmail = async (req, res) => {
@@ -98,8 +134,8 @@ const userForgotPasswordEmail = async (req, res) => {
         const generateOTP = () =>
           Math.floor(1000 + Math.random() * 9000).toString();
         const otp = generateOTP();
-        console.log("otp = = =",otp);
-        const otpExpiration = new Date(Date.now() +3*60 * 1000);
+        console.log("otp = = =", otp);
+        const otpExpiration = new Date(Date.now() + 3 * 60 * 1000);
         // const otpExpiration = new Date(Date.now() + 60 * 1000);
 
         await User.findOneAndUpdate(
@@ -169,14 +205,30 @@ const updatePassword = async (req, res) => {
     );
     await User.updateOne({ email }, { otp: null, otpExpiration: null });
     // res.status(200).json({ message: "Password Updated Successfully" });
-    res.json({ status:200, message: "Password Updated Successfully" });
+    res.json({ status: 200, message: "Password Updated Successfully" });
   } catch (error) {
     return res.json({ status: 500, message: "internal server error" });
   }
 };
-module.exports = { addUser, getUser, login,  userForgotPasswordEmail,
+
+const loggedUser = async (req, res) => {
+  try {
+    const user = req.user
+    return res.json({
+      status: 200,
+      user
+    })
+  } catch (error) {
+    return res.json({
+      status: 500,
+      message: "internal server error "
+    })
+  }
+};
+module.exports = {
+  addUser, getUser, login, userForgotPasswordEmail,
   userForgotPasswordOtp,
-  updatePassword
+  updatePassword, loggedUser
 };
 
 

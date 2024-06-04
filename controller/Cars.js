@@ -64,7 +64,7 @@ const AddCars = async (req, res) => {
 
 const DisplayCars = async (req, res) => {
   try {
-    const data = await Cars.find();
+    const data = await Cars.find({deletedAt:null});
     return res.status(200).json(data);
   } catch (error) {
     return res.status(500).json({ message: 'An error occurred while fetching cars', error: error.message });

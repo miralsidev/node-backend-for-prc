@@ -50,12 +50,12 @@ const login = async (req, res) => {
   //   if (email && password) {
   //     const user = await User.findOne({ email });
   //     if (!user) {
-  //       return res.status(409).json({ message: "Invalid email" });
+  //       return res.json({status:409, message: "Invalid email" });
   //     }
 
   //     const isMatch = await bcrypt.compare(password, user.password);
   //     if (!isMatch) {
-  //       return res.status(409).json({ message: "Invalid password" });
+  //       return res.json({status:409, message: "Invalid password" });
   //     }
   //     let jwtSecretKey = process.env.secret_key;
   //     const token = jwt.sign({ userId: user._id, userEmail: user.email }, jwtSecretKey);
@@ -84,7 +84,8 @@ const login = async (req, res) => {
         const secret = process.env.JWT_SECRATE_KEY
         console.log(secret, "secretsecret")
         console.log(secret)
-        const token = jwt.sign({ userID: user._id }, secret, { expiresIn: '5d' })
+        const token = jwt.sign({ userId: user._id, userEmail: user.email }, secret, { expiresIn: '5d' });
+        // const token = jwt.sign({ userID: user._id }, secret, { expiresIn: '5d' })
         console.log(token, "tokentoken")
         return res.json({
           status: 200,
@@ -214,6 +215,7 @@ const updatePassword = async (req, res) => {
 const loggedUser = async (req, res) => {
   try {
     const user = req.user
+    console.log("logged user =====",user);
     return res.json({
       status: 200,
       user

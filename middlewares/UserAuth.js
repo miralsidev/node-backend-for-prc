@@ -11,10 +11,13 @@ const userAuth = async (req, res, next) => {
   if (authorization && authorization.startsWith('Bearer')) {
     try {
       token = authorization.split(' ')[1]
+
       console.log(token, "tokentoken")
-      const { userID } = jwt.verify(token, process.env.JWT_SECRATE_KEY)
-      console.log(userID, "userID userID userID ")
-      req.user = await User.findById(userID)
+
+      const { userId } = jwt.verify(token, process.env.JWT_SECRATE_KEY)
+
+      console.log(userId, "userID userID userID ")
+      req.user = await User.findById(userId)
       // req.user = await User.findById(userID).select('-password')
       console.log(req.user, "11111111111111111111111111111111111")
       next()

@@ -105,7 +105,7 @@ const login = async (req, res) => {
     }
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ message: 'Server error' });
+    res.json({ status:500,message: 'Server error' });
   }
 };
 const userForgotPasswordEmail = async (req, res) => {

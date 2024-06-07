@@ -6,6 +6,7 @@ const adminRoute = require("./routes/admin")
 const carsRoutes = require('./routes/cars')
 const blogRoutes = require('./routes/Blog')
 const ContactRoutes = require('./routes/Contact')
+const BookingsRoute = require('./routes/Booking')
 const port = process.env.PORT;
 const connectDb = require('./database/db-con')
 const express = require("express");
@@ -21,8 +22,9 @@ app.use(express.json());
 app.use('/admin', adminRoute)
 app.use('/api', userRoute)
 app.use('/cars', carsRoutes)
-app.use('/blog',blogRoutes)
-app.use('/Contact',ContactRoutes)
+app.use('/blog', blogRoutes)
+app.use('/Contact', ContactRoutes)
+app.use('/Booking', BookingsRoute)
 
 connectDb.then(() => {
   app.listen(port, () => {

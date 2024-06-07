@@ -12,7 +12,9 @@ const AddBookings = async (req, res) => {
         return_time,
         price
     } = req.body;
-
+    if(!car_id){
+        return res.json({status:400,message:'please select the car'})
+    }
     const dateFormat = "YYYY-MM-DD";
     const currentDate = moment().startOf("day");
 

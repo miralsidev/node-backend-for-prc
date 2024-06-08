@@ -28,13 +28,13 @@ const initiate = async (req, res) => {
     })
     .catch((error) => {
       console.error("Error occurred during order creation:", error);
-      res.status(500).json({ error: "Internal server error" });
+      res.json({ status: 500, error: "Internal server error" });
     });
 };
 const capture_payment = async (req, res) => {
-  const { paymentId, orderId,booking_id } = req.body;
+  const { paymentId, orderId, booking_id } = req.body;
   if (!razorpay) {
-    res.status(500).send("Razorpay object not initialized");
+    res.json({ status: '500', message: "Razorpay object not initialized" });
     return;
   }
   const data = await Payment.findOneAndUpdate(
@@ -53,31 +53,33 @@ const capture_payment = async (req, res) => {
       payment.order_id === orderId &&
       payment.status === "captured"
     ) {
-      console.log("order id ", bookingModel);
+      // console.log("order id ", bookingModel);
       // const { id: user_id } = req.userData;
       const data = await Booking.findOneAndUpdate(
         { _id: booking_id },
         { $set: { status: "Success" } }
       );
+
       console.log("data ==", data);
       res
-        .status(200)
-        .send({ message: "Payment successful, Your booking is confirmed!" });
+
+        .json({ status: 200, message: "Payment successful, Your booking is confirmed!" });
     } else {
       const data2 = await bookingModel.findOneAndUpdate(
         { orderId: orderId },
         { $set: { status: "Cancelled" } }
       );
       return res
-        .status(400)
-        .send({
+
+        .json({
+          status: 400,
           message: "Payment failed, Your booking is failed!",
           data2: data2,
         });
     }
   } catch (error) {
     console.error("Error capturing payment:", error);
-    return res.status(500).send("Error capturing payment: " + error.message);
+    return res.json({ status: 500, message: "Error capturing payment: " + error.message });
   }
 };
 module.exports = { initiate, capture_payment }

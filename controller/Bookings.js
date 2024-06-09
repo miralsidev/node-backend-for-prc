@@ -71,5 +71,15 @@ const AddBookings = async (req, res) => {
         return res.json({ status: 500, message: "Internal server error" });
     }
 };
-
-module.exports = { AddBookings };
+const MyBooking = async(req,res)=>{
+    try {
+        const user = req.user
+        console.log("logged user =====",user._id);
+        const data = await Booking.find({user_id:user._id});
+        return res.json({ message: "display all data ", data: data });
+      } catch (error) {
+        console.error(error);
+        return res.json({ status: 500, message: "internal server error ", error });
+      }
+}
+module.exports = { AddBookings,MyBooking };

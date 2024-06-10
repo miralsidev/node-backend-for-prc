@@ -57,6 +57,10 @@ const ProductInsertSchema = new mongooes.Schema({
     type: String,
     required: true,
   },
+  isBooking:{
+    type:Boolean,
+    default:false
+  },
   deletedAt: {
     type: Date,
     default: null,

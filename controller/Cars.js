@@ -14,6 +14,7 @@ const AddCars = async (req, res) => {
     fuel,
     brand,
   } = req.body;
+  console.log(req.body,"ftbhytgtygygggyhughughuj")
   console.log("req.bodyreq.body", req.body)
   if (
     plate_number &&
@@ -55,7 +56,7 @@ const AddCars = async (req, res) => {
       return res.json({ status: 200, message: "add cars succesfully.!!" })
     } catch (error) {
       console.log(error);
-      return res.json({ status: 500, message: "intrnal server error" });
+      return res.json({ status: 500, message: "intrnal server .." });
     }
   } else {
     return res.json({ status: 400, message: "all field are required" });

@@ -82,4 +82,13 @@ const capture_payment = async (req, res) => {
     return res.json({ status: 500, message: "Error capturing payment: " + error.message });
   }
 };
-module.exports = { initiate, capture_payment }
+const getPayment = async (req, res) => {
+  try {
+    const data = await Payment.find()
+    return res.json({ data })
+  } catch (error) {
+    console.error("Error capturing payment:", error);
+    return res.json({ status: 500, message: "Error capturing payment: " + error.message });
+  }
+}
+module.exports = { initiate, capture_payment, getPayment }

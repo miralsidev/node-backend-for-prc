@@ -211,7 +211,6 @@ const updatePassword = async (req, res) => {
     return res.json({ status: 500, message: "internal server error" });
   }
 };
-
 const loggedUser = async (req, res) => {
   try {
     const user = req.user

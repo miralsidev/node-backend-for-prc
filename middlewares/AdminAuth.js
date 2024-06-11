@@ -55,11 +55,10 @@ const adminAuth = async (req, res, next) => {
 
       console.log(token, "tokentoken")
 
-      const {id} = jwt.verify(token,    process.env.secret_key)
+      const {id} = jwt.verify(token,process.env.secret_key)
 
       console.log(id, "userID userID userID ")  
       req.admin = await admin.findById(id)
-      // req.user = await User.findById(userID).select('-password')
       console.log(req.admin, "11111111111111111111111111111111111")
       next()
     } catch (error) {

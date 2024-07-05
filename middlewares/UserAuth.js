@@ -9,7 +9,7 @@ const userAuth = async (req, res, next) => {
 
   console.log(authorization, "authorizationauthorization")
   if (authorization && authorization.startsWith('Bearer')) {
-    try {
+    try {``
       token = authorization.split(' ')[1]
 
       console.log(token, "tokentoken")
@@ -36,33 +36,4 @@ const userAuth = async (req, res, next) => {
     })
   }
 };
-
 module.exports = { userAuth };
-
-// const { User } = require("../models/User");
-// const jwt = require("jsonwebtoken");
-// const dotenv = require("dotenv");
-// const { response } = require("express");
-// dotenv.config();
-
-// const userAuth = async (req, res, next) => {
-//   const { authorization } = req.headers;
-//   if (authorization && authorization.startsWith('Bearer')) {
-//     try {
-//       const token = authorization.split(' ')[1];
-//       console.log("--token--", token);
-//       const { userId } = jwt.verify(token, process.env.JWT_SECRATE_KEY);
-//       console.log("UserId==", userId);
-//       req.user = await User.findById(userId);
-  
-//       next();
-//     } catch (error) {
-//       console.error('User authentication failed', error.message);
-//       return res.json({ status: 401, message: "Unauthorized user" });
-//     }
-//   } else {
-//     return res.json({ status: 401, message: "Unauthorized user" });
-//   }
-// };
-
-// module.exports = { userAuth };

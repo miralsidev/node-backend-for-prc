@@ -44,21 +44,7 @@ const AddBookings = async (req, res) => {
             console.log("user id ===== ", req.user);
             const { id: user_id } = req.user;
 
-            // Check if the car is already booked during the requested period
-            // const existingBookings = await Booking.find({
-            //     $and: [
-            //         {
-            //             car_id: car_id,
-            //             pickup_date: pickup_date,
-            //             return_date: return_date,
-            //             isBooking: true
-            //         }
-            //     ]
-            // });
-            // console.log("existingBookingsexistingBookings==", existingBookings)
-            // if (existingBookings.length > 0) {
-            //     return res.json({ status: 400, message: "Car is already booked for the selected dates" });
-            // }
+    
             const data = new Booking({
                 car_id,
                 user_id,
@@ -72,20 +58,9 @@ const AddBookings = async (req, res) => {
             });
 
             await data.save()
-            // if (car_id) {
-            //     const data = await Cars.findByIdAndUpdate(
-            //         {
-            //             _id: car_id,
-            //         },
-            //         {
-            //             isBooking: true,
-            //         }
-            //     );
-            // }
+     
             res.json({ status: 200, message: "Booking Successfully..!!", data });
-            // bookingService.create(data).then((data) => {
-            //     res.status(200).json({ message: "Booking Successfully..!!", data });
-            // });
+     
         } else {
             return res.json({
                 status: 400,
@@ -102,15 +77,10 @@ const MyBooking = async (req, res) => {
         const user = req.user
         console.log("logged user =====", user._id);
         const BookingData = await Booking.find({ user_id: user._id }).populate('car_id');
-        // const CarsId = BookingData.map((booking) => booking.car_id);
-        // console.log("car ids =-=", CarsId);
-        // let carData = [];
-        // if (CarsId.length > 0) {
-        //     carData = await Cars.find({ _id: { $in: CarsId } });
-        // }
+
         const combined = {
             booking: BookingData,
-            // cars: carData
+ 
         }
         res.json(combined)
     } catch (error) {

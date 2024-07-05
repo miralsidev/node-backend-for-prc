@@ -106,7 +106,7 @@ const login = async (req, res) => {
     }
   } catch (err) {
     console.error(err.message);
-    res.json({ status:500,message: 'Server error' });
+    res.json({ status: 500, message: 'Server error' });
   }
 };
 const userForgotPasswordEmail = async (req, res) => {
@@ -214,7 +214,7 @@ const updatePassword = async (req, res) => {
 const loggedUser = async (req, res) => {
   try {
     const user = req.user
-    console.log("logged user =====",user);
+    console.log("logged user =====", user);
     return res.json({
       status: 200,
       user
